@@ -1,0 +1,35 @@
+#! /bin/octave -qf
+
+printf ("%s", program_name ());
+intCompute = 1; 
+varLow  = 0
+varHigh = 65536;
+arg_list = argv ();
+for i = 1:nargin
+  printf (" %s", arg_list{i});
+  if (i == 1)
+     noOfElements = str2num(arg_list{i});
+  endif
+  if (i == 2) 
+     if (strcmp("16bitInt",arg_list{i}) == 1)
+        intCompute = 1; 
+        varLow  = -32768; 
+        varHigh = 32767;
+     elseif (strcmp("16bitIntUnSigned",arg_list{i}) == 1)
+        intCompute = 1; 
+        varLow  = 0
+        varHigh = 65536;
+     endif
+  endif
+endfor
+printf ("\n");
+
+randVecFloat = rand(1,noOfElements,1);
+scaledVec = (randVecFloat*(varHigh - varLow)) + varLow;
+intVec    = ceil(scaledVec); 
+
+
+fftOut = fft(intVec);
+save input.vec intVec;
+save expect.vec fftOut;
+
